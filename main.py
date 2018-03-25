@@ -6,8 +6,8 @@ import random #just for testing purposes
 
 #insertlist = bcv.rcsvail("insertlist.csv")
 #deletelist = bcv.rcsvail("deletelist.csv")
-insertlist = random.sample(range(100, 1000), 60)
-deletelist = random.sample(insertlist, 60)
+insertlist = random.sample(range(100, 1000), 10)
+deletelist = random.sample(insertlist, 10)
 #bcv.elacsv(insertlist, "insertlist.csv")
 #bcv.elacsv(insertlist, "deletelist.csv")
 
@@ -16,10 +16,12 @@ for i in range(0, len(insertlist)):
   print("Inserting key value", insertlist[i])
   tree1.insert(insertlist[i])
   tree1.prettyprint()
-tree1.export_tree_html("mytree.html")
+  tree1.graphvizit("mytree" + str(i), "After inserting key value " + str(insertlist[i]))
+# tree1.export_tree_html("mytree.html")
 for i in range(0, len(deletelist)):
   print("Deleting key value", deletelist[i])
   tree1.delete(deletelist[i])
   tree1.prettyprint()
+  tree1.graphvizit("mytree" + str(i+len(insertlist)), "After deleting key value " + str(deletelist[i]))
 
 # END TEST 1 ----------------------------------------

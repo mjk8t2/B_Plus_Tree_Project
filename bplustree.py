@@ -1,5 +1,12 @@
 import bcv_utilities as bcv
 import ast #just for reading and writing to files
+import os
+from graphviz import Digraph, nohtml # from https://pypi.python.org/pypi/graphviz
+
+# only use this if you can't figure out how to add graphviz/bin to your
+# system's environment variables
+# import os
+# os.environ["PATH"] += os.pathsep + 'C:/Program Files (x86)/Graphviz2.38/bin/'
 
 empty_key = "_"
 empty_child = "·"
@@ -19,6 +26,7 @@ class bplustree:
     #the tree's root is initialized to a list containing just an "empty_child" character
     self.root = [empty_child]
     self.iil = []
+    self.nodenum = 0
     #just import the tree from an external file during intialization if filename was given
     if filename != "":
       self.root = ast.literal_eval(bcv.rfcas(filename))
@@ -288,3 +296,45 @@ class bplustree:
     file = open(filename, "w", encoding="utf-8")
     file.write(finaloutput)
     file.close()
+    
+  def graphviznodemaker(self, g, alist):
+    contents = ""
+    for i in range(0, len(alist)):
+      if type(alist[i]) == list:
+        contents += "<f" + str(i) + "> " + "●"
+        self.graphviznodemaker(g, alist[i])
+        self.nodenum += 1
+      elif alist[i] == empty_child:
+        contents += "<f" + str(i) + "> " + "○"
+      else:
+        contents += "|<f" + str(i) + ">" +str(alist[i])+ " |"
+    g.node("node"+str(self.nodenum), nohtml(contents))
+    for i in range(0, len(alist)):
+      if type(alist[i]) != list and alist[i] != empty_child:
+        alist[i] = self.nodenum
+    
+  def graphvizedgemaker(self, g, alist):
+    for i in range(0, len(alist)):
+      if type(alist[i]) == list:
+        g.edge("node" + str(alist[1]) + ":f" + str(i), "node" + str(alist[i][1]) + ":f0")
+        self.graphvizedgemaker(g, alist[i])
+        
+  def graphvizit(self, filename, operation):
+    graph = Digraph('g', filename='bplustree.gv', node_attr={'shape': 'record', 'height': '.1'}, format='png', )
+    graph.attr(label=operation)
+    graph.attr(labelloc="t")
+    newtree = deepcopy_nested_list(self.root)
+    self.graphviznodemaker(graph, newtree)
+    self.graphvizedgemaker(graph, newtree)
+    self.nodenum = 0
+    graph.render(filename, "output")
+    os.remove("output\\" + filename) #just to remove the useless gv file after it compiles
+      
+def deepcopy_nested_list(data):
+  out = []
+  for el in data:
+    if isinstance(el, list):
+      out.append(deepcopy_nested_list(el))
+    else:
+      out.append(el)
+  return out
