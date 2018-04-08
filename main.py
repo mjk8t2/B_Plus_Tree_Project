@@ -1,27 +1,40 @@
 import bplustree as bp
 import bcv_utilities as bcv
-import random #just for testing purposes
 
 # START TEST 1 ---------------------------------------
 
-#insertlist = bcv.rcsvail("insertlist.csv")
-#deletelist = bcv.rcsvail("deletelist.csv")
-insertlist = random.sample(range(100, 1000), 10)
-deletelist = random.sample(insertlist, 10)
-#bcv.elacsv(insertlist, "insertlist.csv")
-#bcv.elacsv(insertlist, "deletelist.csv")
+buildlist = [12, 35, 3, 20, 85, 22, 5, 10, 1, 18, 11, 55, 99, 36, 47]
+sequence = [("D", 85), ("D", 84), ("D", 18), ("I", 19), ("D", 5), ("D", 47), ("D", 99), ("I", 11)]
 
-tree1 = bp.bplustree(4)
-for i in range(0, len(insertlist)):
-  print("Inserting key value", insertlist[i])
-  tree1.insert(insertlist[i])
-  tree1.prettyprint()
-  tree1.graphvizit("mytree" + str(i), "After inserting key value " + str(insertlist[i]))
-# tree1.export_tree_html("mytree.html")
-for i in range(0, len(deletelist)):
-  print("Deleting key value", deletelist[i])
-  tree1.delete(deletelist[i])
-  tree1.prettyprint()
-  tree1.graphvizit("mytree" + str(i+len(insertlist)), "After deleting key value " + str(deletelist[i]))
+mytree = bp.bplustree(4)
+for i in buildlist:
+  mytree.insert(i)
+print("Original tree:")
+mytree.prettyprint()
+mytree.graphvizit("mytree0", "Original tree")
+
+for i in range(0, len(sequence)):
+  if sequence[i][0] == "D":
+    if sequence[i][1] in mytree.iil:
+      print("Deleting key value", sequence[i][1])
+      mytree.delete(sequence[i][1])
+      mytree.prettyprint()
+      mytree.graphvizit("mytree" + str(i+1), "After deleting key value " + str(sequence[i][1]))
+    else:
+      print("Key with value", sequence[i][1], "is not in the tree! No change made.")
+      mytree.delete(sequence[i][1])
+      mytree.prettyprint()
+      mytree.graphvizit("mytree" + str(i+1), "Key with value " + str(sequence[i][1]) + " is not in the tree! No change made.")
+  elif sequence[i][0] == "I":
+    if sequence[i][1] not in mytree.iil:
+      print("Inserting key value", sequence[i][1])
+      mytree.insert(sequence[i][1])
+      mytree.prettyprint()
+      mytree.graphvizit("mytree" + str(i+1), "After inserting key value " + str(sequence[i][1]))
+    else:
+      print("Key with value", sequence[i][1], "is already in the tree! No change made.")
+      mytree.insert(sequence[i][1])
+      mytree.prettyprint()
+      mytree.graphvizit("mytree" + str(i+1), "Key with value " + str(sequence[i][1]) + " is already in the tree! No change made.")
 
 # END TEST 1 ----------------------------------------
