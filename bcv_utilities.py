@@ -11,7 +11,7 @@ def elacsv(mylist, filename): # export list as csv
     else:
       file.write(str(mylist[i]))
   file.close()
-
+ok = 4
 def rcsvasl(filename): # return csv as string list
   data = rfcas(filename)
   mylist = []

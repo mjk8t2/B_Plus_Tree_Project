@@ -15,26 +15,26 @@ mytree.graphvizit("mytree0", "Original tree")
 
 for i in range(0, len(sequence)):
   if sequence[i][0] == "D":
-    if sequence[i][1] in mytree.iil:
+    if mytree.search(sequence[i][1], mytree.root):
       print("Deleting key value", sequence[i][1])
       mytree.delete(sequence[i][1])
       mytree.prettyprint()
       mytree.graphvizit("mytree" + str(i+1), "After deleting key value " + str(sequence[i][1]))
     else:
-      print("Key with value", sequence[i][1], "is not in the tree! No change made.")
+      print("Cannot delete key value", sequence[i][1], "since it is not in the tree!")
       mytree.delete(sequence[i][1])
       mytree.prettyprint()
-      mytree.graphvizit("mytree" + str(i+1), "Key with value " + str(sequence[i][1]) + " is not in the tree! No change made.")
+      #mytree.graphvizit("mytree" + str(i+1), "Cannot delete key value " + str(sequence[i][1]) + " since it is not in the tree!")
   elif sequence[i][0] == "I":
-    if sequence[i][1] not in mytree.iil:
+    if not mytree.search(sequence[i][1], mytree.root):
       print("Inserting key value", sequence[i][1])
       mytree.insert(sequence[i][1])
       mytree.prettyprint()
       mytree.graphvizit("mytree" + str(i+1), "After inserting key value " + str(sequence[i][1]))
     else:
-      print("Key with value", sequence[i][1], "is already in the tree! No change made.")
+      print("Cannot insert key value", sequence[i][1], "since it is already in the tree!")
       mytree.insert(sequence[i][1])
       mytree.prettyprint()
-      mytree.graphvizit("mytree" + str(i+1), "Key with value " + str(sequence[i][1]) + " is already in the tree! No change made.")
+      mytree.graphvizit("mytree" + str(i+1), "Cannot insert key value " + str(sequence[i][1]) + " since it is already in the tree!")
 
 # END TEST 1 ----------------------------------------

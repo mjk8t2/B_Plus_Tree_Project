@@ -54,6 +54,12 @@ class bplustree:
     else:
       return alist
 
+  def split_node(self, node):
+    j = 2 if self.is_leaf(node) else 0
+    leftnode = node[:self.pop_up_index + j]
+    rightnode = node[self.pop_up_index + 1:]
+    return (leftnode, rightnode)
+
   def node_insert(self, key, node, adjnodes = (empty_child, empty_child)):
     push_index = len(node) - 1
     for i in range(1, len(node), 2):
@@ -64,11 +70,16 @@ class bplustree:
     node.insert(push_index, adjnodes[0])
     node[push_index + 2] = adjnodes[1]
 
-  def split_node(self, node):
-    j = 2 if self.is_leaf(node) else 0
-    leftnode = node[:self.pop_up_index + j]
-    rightnode = node[self.pop_up_index + 1:]
-    return (leftnode, rightnode)
+  def search(self, search_key, node):
+    for i in range(0, len(node)):
+      if type(node[i]) == list:
+        key_cache = self.keys_in_node(node) + [search_key]
+        key_cache.sort()
+        return self.search(search_key, node[2*key_cache.index(search_key)])
+      else:
+        if node[i] == search_key:
+          return True
+    return False
 
   def insert(self, key):
     if key not in self.iil:self.iil.append(key)
@@ -137,8 +148,8 @@ class bplustree:
         del node[j]
         return self.keys_in_node(node)[-1]
       if len(self.keys_in_node(node)) <= (self.order)//2:
-        check1 = not self.is_full(left_node) and self.is_leaf(node) and self.order == 4
-        check2 = left_node != [empty_child] and right_node == [empty_child] and len(node_above) > 3
+        check1 = not self.is_full(left_node) and self.is_leaf(node) and self.order == bcv.ok
+        check2 = left_node != [empty_child] and right_node == [empty_child] and len(node_above) > bcv.ok - 1
         templist = []
         self.keys_in_tree(templist, self.root)
         ijtr = max(templist)
